@@ -1,17 +1,19 @@
-# main.py
 import asyncio
 import websockets
 
 async def sender(ws):
+    """Handles sending messages to the server."""
     while True:
         msg = await asyncio.to_thread(input, "> ")
         await ws.send(msg)
 
 async def receiver(ws):
+    """Handles messages received from the server."""
     async for msg in ws:
         print(msg)
 
 async def client():
+    """Connects to the server and runs the send/receive tasks."""
     server_id: str = input("Enter a server to join: ")
     username: str = input("Enter a username: ")
 

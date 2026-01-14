@@ -2,7 +2,10 @@
 from core import Core
 from user import User
 
-class Handler:
+class UserHandler:
+    """
+    Handles a single user's WebSocket connection.
+    """
     def __init__(self, websocket, core: Core) -> None:
         self.websocket = websocket
         self.core = core
@@ -11,6 +14,9 @@ class Handler:
 
 
     async def handle(self):
+        """
+        Handles the connection lifecycle for the user.
+        """
         try:
             join_message = await self.websocket.recv()
             self.server_id, username = parse_join(join_message)
@@ -26,6 +32,9 @@ class Handler:
 
 
     async def broadcast(self, msg: str):
+        """
+        Broadcasts a message to all other users in the same server.
+        """
         if self.server_id is not None:
             for user in self.core.dictionary[self.server_id]:
                 if user != self.user:
@@ -34,5 +43,8 @@ class Handler:
 
 
 def parse_join(msg: str) -> tuple[str, str]:
+    """
+    Parses join message in form 'server_id:username'.
+    """
     first, second = msg.split(':', 1)
     return (first, second)

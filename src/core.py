@@ -1,7 +1,9 @@
-# core.py
 from user import User
 
 class Core:
+    """ 
+    Manages users grouped by server ID. 
+    """
     def __init__(self) -> None:
         self.dictionary: dict[str, set[User]] = {}
 

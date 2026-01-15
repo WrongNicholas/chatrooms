@@ -1,3 +1,7 @@
+## Software Engineering EECE 3093C Project
+
+A chat app.
+
 ## Setup
 
 After cloning:

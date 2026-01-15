@@ -1,8 +1,8 @@
 # handler.py
-from core import Core
-from message import ChatMessage, CommandMessage, ErrorMessage, JoinMessage
-from protocol import parse_message, serialize_message
-from user import User
+from chatrooms.core import Core
+from chatrooms.message import ChatMessage, CommandMessage, ErrorMessage, JoinMessage
+from chatrooms.protocol import parse_message, serialize_message
+from chatrooms.user import User
 
 class UserHandler:
     """

@@ -8,13 +8,13 @@ PIP := $(VENV)/bin/pip
 	$(PIP) install --upgrade pip
 
 install: .venv
-	$(PIP) install -r requirements.txt
+	$(PIP) install -e .
 
 server: .venv
-	$(VPY) src/server.py
+	$(VPY) -m chatrooms.server
 
 client: .venv
-	$(VPY) src/client.py
+	$(VPY) -m chatrooms.client
 
 clean:
 	rm -rf $(VENV)

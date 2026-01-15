@@ -1,6 +1,6 @@
 import websockets
-from core import Core
-from handler import UserHandler
+from chatrooms.core import Core
+from chatrooms.handler import UserHandler
 import asyncio
 
 core = Core()

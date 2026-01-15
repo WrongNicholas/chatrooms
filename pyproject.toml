@@ -1,0 +1,19 @@
+
+[build-system]
+requires = ["setuptools"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "chatrooms"
+version = "0.1.0"
+description = "WebSocket-based chat application"
+requires-python = ">=3.10"
+dependencies = [
+  "websockets>=16.0"
+]
+
+[tool.setuptools]
+package-dir = {"" = "src"}
+
+[tool.setuptools.packages.find]
+where = ["src"]

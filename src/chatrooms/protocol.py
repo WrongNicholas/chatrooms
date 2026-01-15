@@ -1,6 +1,6 @@
 import json
 from typing import Any
-from message import Message, JoinMessage, ChatMessage, CommandMessage, ErrorMessage
+from chatrooms.message import Message, JoinMessage, ChatMessage, CommandMessage, ErrorMessage
 from dataclasses import asdict
 
 """

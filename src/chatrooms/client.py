@@ -1,7 +1,7 @@
 import asyncio
 import websockets
-from message import ChatMessage, JoinMessage
-from protocol import generate_message, serialize_message, parse_message
+from chatrooms.message import ChatMessage, JoinMessage
+from chatrooms.protocol import generate_message, serialize_message, parse_message
 
 async def sender(ws):
     """Handles sending messages to the server."""

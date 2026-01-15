@@ -1,4 +1,4 @@
-from user import User
+from chatrooms.user import User
 
 class Core:
     """ 

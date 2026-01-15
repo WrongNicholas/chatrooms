@@ -1,5 +1,7 @@
 # handler.py
 from core import Core
+from message import ChatMessage, CommandMessage, ErrorMessage, JoinMessage
+from protocol import parse_message, serialize_message
 from user import User
 
 class UserHandler:
@@ -18,33 +20,50 @@ class UserHandler:
         Handles the connection lifecycle for the user.
         """
         try:
-            join_message = await self.websocket.recv()
-            self.server_id, username = parse_join(join_message)
-
-            self.user = User(username, self.websocket)
-            self.core.join(self.server_id, self.user)
-
-            async for msg in self.websocket:
-                await self.broadcast(msg)
+            async for raw in self.websocket:
+                msg = parse_message(raw)
+                if type(msg) == JoinMessage:
+                    self.server_id = msg.server_id
+                    self.user = User(msg.user_name, self.websocket)
+                    self.core.join(self.server_id, self.user)
+                elif type(msg) == ChatMessage:
+                    await self.broadcast(raw)
+                elif type(msg) == ErrorMessage:
+                    print(f"ERROR: ErrorMessage: {msg.error}")
+                elif type(msg) == CommandMessage:
+                    await self.handle_command(msg)
         finally:
             if self.user and self.server_id:
                 self.core.leave(self.server_id, self.user)
 
 
-    async def broadcast(self, msg: str):
+    async def broadcast(self, msg: str) -> None:
         """
         Broadcasts a message to all other users in the same server.
         """
         if self.server_id is not None:
             for user in self.core.dictionary[self.server_id]:
                 if user != self.user:
-                    print(f"Broadcasting to server: {self.server_id}: {msg}")
+                    print(f"Broadcasting ChatMessage to server: {self.server_id}: {msg}")
                     await user.websocket.send(msg)
 
+    async def handle_command(self, msg: CommandMessage) -> None:
+        """
+        Handles CommandMessages sent to the server.
+        """
+        if msg.command == "leave":
+            await self.user_leave()
+        else:
+            # TODO: probably fix whatever the hell this is
+            await self.user.websocket.send(serialize_message(ChatMessage(
+                type="message",
+                contents="Command not found! Available commands:\n /leave"
+            )))
 
-def parse_join(msg: str) -> tuple[str, str]:
-    """
-    Parses join message in form 'server_id:username'.
-    """
-    first, second = msg.split(':', 1)
-    return (first, second)
+    async def user_leave(self) -> None:
+        """
+        Handles this user leaving the server.
+        """
+        if self.user and self.server_id:
+            self.core.leave(self.server_id, self.user)
+            await self.websocket.close()

@@ -1,24 +1,36 @@
 import asyncio
 import websockets
+from message import ChatMessage, JoinMessage
+from protocol import generate_message, serialize_message, parse_message
 
 async def sender(ws):
     """Handles sending messages to the server."""
     while True:
-        msg = await asyncio.to_thread(input, "> ")
-        await ws.send(msg)
+        try:
+            contents = await asyncio.to_thread(input, "> ")
+            msg = generate_message(contents)
+            serialized_message = serialize_message(msg)
+            await ws.send(serialized_message)
+        except websockets.exceptions.ConnectionClosed:
+            break;
 
 async def receiver(ws):
     """Handles messages received from the server."""
     async for msg in ws:
-        print(msg)
+        parsed_message = parse_message(msg)
+        if type(parsed_message) == ChatMessage:
+            print(parsed_message.contents)
 
 async def client():
     """Connects to the server and runs the send/receive tasks."""
     server_id: str = input("Enter a server to join: ")
-    username: str = input("Enter a username: ")
+    user_name: str = input("Enter a username: ")
+
+    join_message = JoinMessage(type="join", server_id=server_id, user_name=user_name)
+    serialized_join_message = serialize_message(join_message)
 
     async with websockets.connect("ws://localhost:8765") as ws:
-        await ws.send(f"{server_id}:{username}")
+        await ws.send(serialized_join_message)
 
         await asyncio.gather(
             sender(ws),

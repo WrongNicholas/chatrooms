@@ -2,7 +2,26 @@
 
 A chat app.
 
-## Setup
+## Windows
+
+After cloning:
+```sh
+python -m venv .venv
+.\.venv\Scripts\activate.bat
+pip install -r requirements.txt
+```
+
+# Run the server
+```sh
+python src/server.py
+```
+
+# Run the client
+```sh
+python src/client.py
+```
+
+## Setup UNIX
 
 After cloning:
 

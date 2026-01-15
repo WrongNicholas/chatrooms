@@ -2,46 +2,40 @@
 
 A chat app.
 
-## Windows
+## Setup
 
-After cloning:
+Clone the repository:
 ```sh
-python -m venv .venv
-.\.venv\Scripts\activate.bat
-pip install -r requirements.txt
+git clone https://github.com/WrongNicholas/chatrooms.git
+cd chatrooms
 ```
 
-# Run the server
-```sh
-python src/server.py
-```
-
-# Run the client
-```sh
-python src/client.py
-```
-
-## Setup UNIX
-
-After cloning:
-
+Create the Python virtual environment:
 ```sh
 make .venv
+```
+
+Activate the virtual environment:
+```sh
+source .venv/bin/activate
+```
+
+Install dependencies:
+```sh
 make install
 ```
 
-# Run the server
+# Running the Application
+Running the server:
 ```sh
 make server
 ```
 
-# Run the client
+Running the client:
 ```sh
 make client
 ```
 
-# Note
-The server runs on:
-```sh
-ws://localhost:8675
-```
+# Notes
+- All Makefile commands explicitly use the virtual environment's `python` and `pip`.
+- You do not need to have the virtual environment active to run `make` commands.

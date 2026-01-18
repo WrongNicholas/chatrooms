@@ -1,6 +1,8 @@
 ## Software Engineering EECE 3093C Project
 
-A chat app.
+A WebSocket-based chat application.
+
+---
 
 ## Setup
 
@@ -10,32 +12,32 @@ git clone https://github.com/WrongNicholas/chatrooms.git
 cd chatrooms
 ```
 
-Create the Python virtual environment:
-```sh
-make .venv
-```
+No additional setup required. The Makefile manages the virtual environment and dependencies automatically.
 
-Activate the virtual environment:
-```sh
-source .venv/bin/activate
-```
-
-Install dependencies:
-```sh
-make install
-```
-
-# Running the Application
-Running the server:
+## Running the Application
+Run the server:
 ```sh
 make server
 ```
 
-Running the client:
+Run the client:
 ```sh
 make client
 ```
 
-# Notes
-- All Makefile commands explicitly use the virtual environment's `python` and `pip`.
-- You do not need to have the virtual environment active to run `make` commands.
+## Running Tests
+```sh
+make test
+```
+
+This installs test dependencies and runs the full test sweet.
+
+## Cleaning the Environment
+```sh
+make clean
+```
+This removes the virtual environment (`.venv`) and generated Python artifacts.
+
+## Requirements
+- Python 3.10+
+- `make`

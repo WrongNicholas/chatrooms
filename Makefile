@@ -3,20 +3,31 @@ VENV := .venv
 VPY := $(VENV)/bin/python
 PIP := $(VENV)/bin/pip
 
-.venv:
+.PHONY: install install-test test server client clean
+
+$(VENV):
 	$(PYTHON) -m venv $(VENV)
 	$(PIP) install --upgrade pip
 
-install: .venv
+install: $(VENV)
 	$(PIP) install -e .
 
-server: .venv
+install-test: $(VENV)
+	$(PIP) install -e ".[test]"
+
+test: install-test
+	$(VPY) -m pytest
+
+server: install
 	$(VPY) -m chatrooms.server
 
-client: .venv
+client: install
 	$(VPY) -m chatrooms.client
 
 clean:
 	rm -rf $(VENV)
+	find . -name "__pycache__" -type d -exec rm -rf {} +
+	find . -name "*.pyc" -delete
 
-.PHONY: install server client clean
+deep-clean:
+	rm -rf .pytest_cache

@@ -19,3 +19,6 @@ def test_enerate_message_creates_chat_message():
     assert isinstance(message, ChatMessage)
     assert message.type == "message"
     assert message.contents == "hello world"
+
+def test_should_fail():
+    assert False

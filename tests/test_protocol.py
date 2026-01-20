@@ -46,7 +46,6 @@ def test_serialize_message_properly_serializes_join_message():
 
     expected = '{"type": "join", "server_id": "my_server_id", "user_name": "my_user_name"}'
     actual = serialize_message(message)
-
     assert expected == actual
 
 def test_serialize_message_properly_serializes_error_message():

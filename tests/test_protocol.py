@@ -1,5 +1,3 @@
-import json
-
 from chatrooms.protocol import (
     generate_message,
     serialize_message,

@@ -3,6 +3,7 @@ from chatrooms.core import Core
 from chatrooms.handler import UserHandler
 import asyncio
 
+# Comment
 core = Core()
 
 async def handle_connection(websocket):

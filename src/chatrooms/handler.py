@@ -37,11 +37,7 @@ class UserHandler:
                     print(f"ERROR: ErrorMessage: {msg.error}")
                 elif type(msg) == CommandMessage:
                     await self.handle_command(msg)
-                    
-                    if msg.command == "leave":
-                        brodcastLeave : ChatMessage = ChatMessage(type="message", contents=f"{self.user.name} has left the room.")
-                        outputMessage : str = serialize_message(brodcastLeave)
-                        await self.broadcast(outputMessage)
+                       
 
         finally:
             if self.user and self.server_id:
@@ -75,6 +71,10 @@ class UserHandler:
         """
         Handles this user leaving the server.
         """
+        brodcastLeave : ChatMessage = ChatMessage(type="message", contents=f"{self.user.name} has left the room.")
+        outputMessage : str = serialize_message(brodcastLeave)
+        await self.broadcast(outputMessage)
+
         if self.user and self.server_id:
             self.core.leave(self.server_id, self.user)
             await self.websocket.close()

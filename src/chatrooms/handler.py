@@ -13,7 +13,7 @@ class UserHandler:
         self.core = core
         self.user = None
         self.server_id = None
-###PENIS
+
 
     async def handle(self):
         """
@@ -26,12 +26,23 @@ class UserHandler:
                     self.server_id = msg.server_id
                     self.user = User(msg.user_name, self.websocket)
                     self.core.join(self.server_id, self.user)
+
+                    BrodcastJoin : ChatMessage = ChatMessage(type="message", contents=f"{msg.user_name} has joined the room.")
+                    output_message : str = serialize_message(BrodcastJoin)
+                    await self.broadcast(output_message)
+
                 elif type(msg) == ChatMessage:
                     await self.broadcast(raw)
                 elif type(msg) == ErrorMessage:
                     print(f"ERROR: ErrorMessage: {msg.error}")
                 elif type(msg) == CommandMessage:
                     await self.handle_command(msg)
+                    
+                    if msg.command == "leave":
+                        BrodcastLeave : ChatMessage = ChatMessage(type="message", contents=f"{self.user.name} has left the room.")
+                        output_message : str = serialize_message(BrodcastLeave)
+                        await self.broadcast(output_message)
+                        
         finally:
             if self.user and self.server_id:
                 self.core.leave(self.server_id, self.user)

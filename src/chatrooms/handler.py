@@ -27,9 +27,9 @@ class UserHandler:
                     self.user = User(msg.user_name, self.websocket)
                     self.core.join(self.server_id, self.user)
 
-                    BrodcastJoin : ChatMessage = ChatMessage(type="message", contents=f"{msg.user_name} has joined the room.")
-                    output_message : str = serialize_message(BrodcastJoin)
-                    await self.broadcast(output_message)
+                    brodcastJoin : ChatMessage = ChatMessage(type="message", contents=f"{msg.user_name} has joined the room.")
+                    outputMessage : str = serialize_message(brodcastJoin)
+                    await self.broadcast(outputMessage)
 
                 elif type(msg) == ChatMessage:
                     await self.broadcast(raw)
@@ -39,10 +39,10 @@ class UserHandler:
                     await self.handle_command(msg)
                     
                     if msg.command == "leave":
-                        BrodcastLeave : ChatMessage = ChatMessage(type="message", contents=f"{self.user.name} has left the room.")
-                        output_message : str = serialize_message(BrodcastLeave)
-                        await self.broadcast(output_message)
-                        
+                        brodcastLeave : ChatMessage = ChatMessage(type="message", contents=f"{self.user.name} has left the room.")
+                        outputMessage : str = serialize_message(brodcastLeave)
+                        await self.broadcast(outputMessage)
+
         finally:
             if self.user and self.server_id:
                 self.core.leave(self.server_id, self.user)

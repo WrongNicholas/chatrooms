@@ -15,3 +15,10 @@ class Core:
         if server_id in self.dictionary and user in self.dictionary[server_id]:
             self.dictionary[server_id].remove(user)
             print(f"'{user.name}' has left server '{server_id}'")
+    def username_taken(self, server_id: str, username: str):
+        if server_id not in self.dictionary:
+            return False
+        for user in self.dictionary[server_id]:
+            if user.name == username:
+                return True
+        return False

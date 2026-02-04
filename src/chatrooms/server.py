@@ -4,7 +4,6 @@ from chatrooms.handler import UserHandler
 import asyncio
 
 core = Core()
-
 async def handle_connection(websocket):
     """
     Handles a single incoming WebSocket connection.

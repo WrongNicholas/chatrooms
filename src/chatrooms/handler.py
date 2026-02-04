@@ -23,9 +23,14 @@ class UserHandler:
             async for raw in self.websocket:
                 msg = parse_message(raw)
                 if type(msg) == JoinMessage:
-                    self.server_id = msg.server_id
-                    self.user = User(msg.user_name, self.websocket)
-                    self.core.join(self.server_id, self.user)
+                    if self.core.username_taken(msg.server_id, msg.user_name):
+                        user_error = ErrorMessage(type="error", error="Username already taken. Please choose a new one")
+                        serialized_error = serialize_message(user_error)
+                        await self.websocket.send(serialized_error)
+                    else:
+                        self.server_id = msg.server_id
+                        self.user = User(msg.user_name, self.websocket)
+                        self.core.join(self.server_id, self.user)
                 elif type(msg) == ChatMessage:
                     await self.broadcast(raw)
                 elif type(msg) == ErrorMessage:

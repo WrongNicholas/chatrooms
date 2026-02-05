@@ -17,8 +17,11 @@ async def server():
     Starts the WebSocket server and runs it indefinitely.
     """
     # TODO: switch to some "0.0.0.0" to enable port forwarding
-    async with websockets.serve(handle_connection, "localhost", 8765):
-        print("Server listening on ws://localhost:8765")
+
+    ip ="localhost"
+    port = 8765
+    async with websockets.serve(handle_connection, ip, port):
+        print("Server listening on ws://" + ip + ":" + str(port))
         await asyncio.Future()
 
 if __name__ == "__main__":

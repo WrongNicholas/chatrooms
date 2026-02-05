@@ -18,6 +18,7 @@ async def server():
     """
     # TODO: switch to some "0.0.0.0" to enable port forwarding
     async with websockets.serve(handle_connection, "localhost", 8765):
+        print("Server listening on ws://localhost:8765")
         await asyncio.Future()
 
 if __name__ == "__main__":

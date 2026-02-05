@@ -12,7 +12,7 @@ class UserHandler:
         self.websocket = websocket
         self.core = core
         self.user: User
-        self.server_id = None
+        self.room_id = None
 
 
     async def handle(self):
@@ -24,9 +24,9 @@ class UserHandler:
                 msg = parse_message(raw)
                 if type(msg) == JoinMessage:
                     # Set up this handler
-                    self.server_id = msg.server_id
+                    self.room_id = msg.room_id
                     self.user = User(msg.user_name, self.websocket)
-                    self.core.join(self.server_id, self.user)
+                    self.core.join(self.room_id, self.user)
 
                     # Construct and broadcast chat message on join
                     join_broadcast = ChatMessage(type="message", contents=f"{msg.user_name} has joined the room.")
@@ -40,18 +40,18 @@ class UserHandler:
                 elif type(msg) == CommandMessage:
                     await self.handle_command(msg)
         finally:
-            if self.user and self.server_id:
-                self.core.leave(self.server_id, self.user)
+            if self.user and self.room_id:
+                self.core.leave(self.room_id, self.user)
 
 
     async def broadcast(self, msg: str) -> None:
         """
-        Broadcasts a message to all other users in the same server.
+        Broadcasts a message to all other users in the same room.
         """
-        if self.server_id is not None:
-            for user in self.core.dictionary[self.server_id]:
+        if self.room_id is not None:
+            for user in self.core.rooms[self.room_id]:
                 if user != self.user:
-                    print(f"Broadcasting ChatMessage to server: {self.server_id}: {msg}")
+                    print(f"Broadcasting ChatMessage to room: {self.room_id}: {msg}")
                     await user.websocket.send(msg)
 
 
@@ -70,14 +70,14 @@ class UserHandler:
 
     async def user_leave(self) -> None:
         """
-        Handles this user leaving the server.
+        Handles this user leaving the room.
         """
-        if self.user and self.server_id:
+        if self.user and self.room_id:
             # Construct and broadcast chat message on leave
             leave_broadcast = ChatMessage(type="message", contents=f"{self.user.name} has left the room.")
             serialized_leave_broadcast : str = serialize_message(leave_broadcast)
             await self.broadcast(serialized_leave_broadcast)
 
             # Remove user from core dictionary
-            self.core.leave(self.server_id, self.user)
+            self.core.leave(self.room_id, self.user)
             await self.websocket.close()

@@ -45,7 +45,7 @@ def parse_message(raw_message: str) -> Message:
     if message_type == "join":
         return JoinMessage(
             type="join", 
-            server_id=data["server_id"], 
+            room_id=data["room_id"], 
             user_name=data["user_name"]
         )
     elif message_type == "message":

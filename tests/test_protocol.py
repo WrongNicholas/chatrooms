@@ -42,9 +42,9 @@ def test_serialize_message_properly_serializes_command_message():
     assert expected == actual
 
 def test_serialize_message_properly_serializes_join_message():
-    message = JoinMessage(type="join", server_id="my_server_id", user_name="my_user_name")
+    message = JoinMessage(type="join", room_id="my_room_id", user_name="my_user_name")
 
-    expected = '{"type": "join", "server_id": "my_server_id", "user_name": "my_user_name"}'
+    expected = '{"type": "join", "room_id": "my_room_id", "user_name": "my_user_name"}'
     actual = serialize_message(message)
     assert expected == actual
 
@@ -73,12 +73,12 @@ def test_parse_message_properly_parses_command_message():
     assert parsed_message.command == "leave"
 
 def test_parse_message_properly_parses_join_message():
-    raw_message = '{"type": "join", "server_id": "my_server_id", "user_name": "my_user_name"}'
+    raw_message = '{"type": "join", "room_id": "my_room_id", "user_name": "my_user_name"}'
     parsed_message = parse_message(raw_message)    
 
     assert isinstance(parsed_message, JoinMessage)
     assert parsed_message.type == "join"
-    assert parsed_message.server_id == "my_server_id"
+    assert parsed_message.room_id == "my_room_id"
     assert parsed_message.user_name == "my_user_name"
 
 def test_parse_message_properly_parses_error_message():

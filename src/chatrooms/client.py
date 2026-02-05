@@ -23,10 +23,10 @@ async def receiver(ws):
 
 async def client():
     """Connects to the server and runs the send/receive tasks."""
-    server_id: str = input("Enter a server to join: ")
+    room_id: str = input("Enter a room to join: ")
     user_name: str = input("Enter a username: ")
 
-    join_message = JoinMessage(type="join", server_id=server_id, user_name=user_name)
+    join_message = JoinMessage(type="join", room_id=room_id, user_name=user_name)
     serialized_join_message = serialize_message(join_message)
 
     async with websockets.connect("ws://localhost:8765") as ws:

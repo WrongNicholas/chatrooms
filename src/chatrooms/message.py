@@ -7,8 +7,8 @@ class Message:
 
 @dataclass(frozen=True)
 class JoinMessage(Message):
-    """Sent by a client to join a server."""
-    server_id: str
+    """Sent by a client to join a room."""
+    room_id: str
     user_name: str
 
 @dataclass(frozen=True)

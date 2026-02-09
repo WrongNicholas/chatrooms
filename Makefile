@@ -24,6 +24,9 @@ server: install
 client: install
 	$(VPY) -m chatrooms.client
 
+gui: client
+	$(VPY) -m chatrooms.gui
+
 clean:
 	rm -rf $(VENV)
 	find . -name "__pycache__" -type d -exec rm -rf {} +

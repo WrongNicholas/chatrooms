@@ -24,7 +24,7 @@ server: install
 client: install
 	$(VPY) -m chatrooms.client
 
-gui: client
+gui: install
 	$(VPY) -m chatrooms.gui
 
 clean:

@@ -1,3 +1,4 @@
+
 import sys
 from PyQt6.QtWidgets import (QApplication, QMainWindow, QWidget, QVBoxLayout, QHBoxLayout,
                              QLabel, QLineEdit, QPushButton, QTextEdit, QStackedWidget)
@@ -8,6 +9,9 @@ class ChatRoomsGUI(QMainWindow):
         super().__init__()
         self.setWindowTitle("Chatrooms GUI Beta")
         self.resize(400, 500)
+
+        self.user: str = None
+        self.room_id: str = None
 
         self.stacked_widget: QStackedWidget= QStackedWidget()
         self.setCentralWidget(self.stacked_widget)
@@ -36,6 +40,7 @@ class ChatRoomsGUI(QMainWindow):
         layout.addStretch()
         self.username_widget.setLayout(layout)
 
+        self.username_input.returnPressed.connect(self.on_submit_username)
         self.submit_username_button.clicked.connect(self.on_submit_username)
 
     def init_room_selection_page(self):
@@ -54,12 +59,15 @@ class ChatRoomsGUI(QMainWindow):
         layout.addStretch()
         self.room_selection_widget.setLayout(layout)
 
+        self.room_input.returnPressed.connect(self.on_join_room)
         self.join_room_button.clicked.connect(self.on_join_room)
     
     def init_chat_page(self):
         """Sets up the main chat page"""
         self.chat_widget: QWidget = QWidget()
         layout: QVBoxLayout = QVBoxLayout()
+
+        self.room_info_label: QLabel = QLabel()
 
         self.chat_display: QTextEdit = QTextEdit()
         self.chat_display.setReadOnly(True)
@@ -70,30 +78,46 @@ class ChatRoomsGUI(QMainWindow):
         input_layout.addWidget(self.message_input)
         input_layout.addWidget(self.send_message_button)
 
+        layout.addWidget(self.room_info_label)
         layout.addWidget(self.chat_display)
         layout.addLayout(input_layout)
 
         self.chat_widget.setLayout(layout)
 
+        self.message_input.returnPressed.connect(self.on_send_message)
         self.send_message_button.clicked.connect(self.on_send_message)
     
 
-    """helper functions"""
+    """event handler functions"""
     def on_submit_username(self):
-        self.user: str = self.username_input.text()
-        self.stacked_widget.setCurrentWidget(self.room_selection_widget)
+        username = self.username_input.text().strip()
+        if username:
+            self.user = username
+            self.stacked_widget.setCurrentWidget(self.room_selection_widget)
+            self.room_input.setFocus()
 
     def on_join_room(self):
-        self.room_id:str = self.room_input.text()
-        #TODO: add functionality to actually make client and join room
-        self.stacked_widget.setCurrentWidget(self.chat_widget)
-
+        room_id = self.room_input.text().strip()
+        if room_id:
+            self.room_id = room_id
+            self.room_info_label.setText(f"Room: {self.room_id} | User: {self.user}")
+            self.stacked_widget.setCurrentWidget(self.chat_widget)
+            self.message_input.setFocus()
+            #TODO: connect to server and start listening for messages
 
     def on_send_message(self):
         message: str = self.message_input.text()
-        self.chat_display.append(f"{self.user}: {message}")
-        self.message_input.clear()
-        #TODO: add functionality to actually send message to server
+        if message:
+            self.message_input.clear()
+            #TODO: send message to server
+
+    def display_message(self, message: str):
+        self.chat_display.append(message)
+    
+
+
+    
+
 
 
 if __name__ == "__main__":

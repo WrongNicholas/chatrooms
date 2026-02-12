@@ -26,8 +26,6 @@ class ChatClient:
         
         self.ws = await websockets.connect(self.url)
 
-        if not self.ws.open:
-            raise ConnectionError("Failed to establish a connection to the server.")
         
         join_message = JoinMessage(type="join", room_id=room_id, user_name=user_name)
         await self.ws.send(serialize_message(join_message))

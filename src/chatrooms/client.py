@@ -1,5 +1,5 @@
 import asyncio
-from typing import Optional, Callable, Any
+from typing import Callable, Any
 import websockets
 from chatrooms.message import ChatMessage, JoinMessage, Message
 from chatrooms.protocol import generate_message, serialize_message, parse_message
@@ -7,7 +7,7 @@ from chatrooms.protocol import generate_message, serialize_message, parse_messag
 
 class ChatClient:
     """
-    A reusable client class that handles the websocket connection,
+    A client class that handles the websocket connection,
     sending messages, and receiving messages.
     """
     def __init__(self, url: str = "ws://localhost:8765") -> None:

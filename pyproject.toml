@@ -9,7 +9,8 @@ version = "0.1.0"
 description = "WebSocket-based chat application"
 requires-python = ">=3.10"
 dependencies = [
-  "websockets>=16.0"
+  "websockets>=16.0",
+  "pyqt6>=6.10.2",
 ]
 
 [project.optional-dependencies]

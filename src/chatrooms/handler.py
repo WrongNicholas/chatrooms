@@ -61,10 +61,12 @@ class UserHandler:
         """
         if msg.command == "leave":
             await self.user_leave()
+        elif msg.command == "swap":
+            await self.user_swap(msg.args)
         else:
             await self.user.websocket.send(serialize_message(ChatMessage(
                 type="message",
-                contents="Command not found! Available commands:\n /leave"
+                contents="Command not found! Available commands:\n /leave\n /swap <room_id>"
             )))
 
 
@@ -81,3 +83,18 @@ class UserHandler:
             # Remove user from core dictionary
             self.core.leave(self.room_id, self.user)
             await self.websocket.close()
+
+    async def user_swap(self, new_room_id: str) -> None:
+        """
+        Handles this user changing rooms.
+        """
+        if self.user and self.room_id:
+            # Construct and broadcast chat message on leave
+            leave_broadcast = ChatMessage(type="message", contents=f"{self.user.name} has left the room.")
+            serialized_leave_broadcast : str = serialize_message(leave_broadcast)
+            await self.broadcast(serialized_leave_broadcast)
+
+            # Swap user in core dictionary, don't close websocket
+            self.core.swap(self.room_id, self.user, new_room_id)
+            # Swap handler room referenced
+            self.room_id = new_room_id

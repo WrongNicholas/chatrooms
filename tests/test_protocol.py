@@ -25,6 +25,14 @@ def test_generate_message_creates_command_message():
     assert message.type == "command"
     assert message.command == "help"
 
+def test_generate_message_creates_command_message_with_args():
+    message = generate_message("/swap new_room_id")
+
+    assert isinstance(message, CommandMessage)
+    assert message.type == "command"
+    assert message.command == "swap"
+    assert message.args == "new_room_id"
+
 def test_serialize_message_properly_serializes_chat_message():
     message = ChatMessage(type="message", contents="hello world")
 
@@ -34,9 +42,17 @@ def test_serialize_message_properly_serializes_chat_message():
     assert expected == actual
 
 def test_serialize_message_properly_serializes_command_message():
-    message = CommandMessage(type="command", command="help")
+    message = CommandMessage(type="command", command="help", args="")
 
-    expected = '{"type": "command", "command": "help"}'
+    expected = '{"type": "command", "command": "help", "args": ""}'
+    actual = serialize_message(message)
+
+    assert expected == actual
+
+def test_serialize_message_properly_serializes_command_message_with_args():
+    message = CommandMessage(type="command", command="swap", args="new_room_id")
+    
+    expected = '{"type": "command", "command": "swap", "args": "new_room_id"}'
     actual = serialize_message(message)
 
     assert expected == actual
@@ -65,7 +81,7 @@ def test_parse_message_properly_parses_chat_message():
     assert parsed_message.contents == "hello world"
 
 def test_parse_message_properly_parses_command_message():
-    raw_message = '{"type": "command", "command": "leave"}'
+    raw_message = '{"type": "command", "command": "leave", "args": ""}'
     parsed_message = parse_message(raw_message)    
 
     assert isinstance(parsed_message, CommandMessage)

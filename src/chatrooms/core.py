@@ -21,3 +21,10 @@ class Core:
         if room_id in self.rooms and user in self.rooms[room_id]:
             self.rooms[room_id].remove(user)
             print(f"'{user.name}' has left room '{room_id}'")
+
+    """
+    Swaps users room.
+    """
+    def swap(self, old_room_id: str, user: User, new_room_id: str):
+        self.leave(old_room_id, user)
+        self.join(new_room_id, user)

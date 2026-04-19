@@ -20,6 +20,7 @@ class ChatMessage(Message):
 class CommandMessage(Message):
     """Represents a command message sent to server."""
     command: str
+    args: str
 
 @dataclass(frozen=True)
 class ErrorMessage(Message):

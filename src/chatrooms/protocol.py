@@ -12,9 +12,15 @@ def generate_message(contents: str) -> Message:
     Creates Messages from raw input. Commands are inferred from leading '/'.
     """
     if contents.startswith("/"):
+        # split command string into command and args
+        parts = contents[1:].split(maxsplit=1)
+        command = parts[0]
+        args = parts[1] if len(parts) > 1 else ""
+
         return CommandMessage(
             type="command",
-            command=contents[1:]
+            command=command,
+            args=args
         )
     else:
         return ChatMessage(
@@ -56,7 +62,8 @@ def parse_message(raw_message: str) -> Message:
     elif message_type == "command":
         return CommandMessage(
             type="command",
-            command=data["command"]
+            command=data["command"],
+            args=data["args"]
         )
     elif message_type == "error":
         return ErrorMessage(

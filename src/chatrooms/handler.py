@@ -63,6 +63,8 @@ class UserHandler:
             await self.user_leave()
         elif msg.command == "swap":
             await self.user_swap(msg.args)
+        elif msg.command == "kick":
+            await self.user_kick(msg.args)
         else:
             await self.user.websocket.send(serialize_message(ChatMessage(
                 type="message",
@@ -98,3 +100,27 @@ class UserHandler:
             self.core.swap(self.room_id, self.user, new_room_id)
             # Swap handler room referenced
             self.room_id = new_room_id
+
+    async def user_kick(self, user_to_kick: str) -> None:
+        """
+        Kicks user from this room.
+        """
+        if not (self.user and self.room_id):
+            return
+
+        if self.core.admins.get(self.room_id) != self.user:
+            return
+
+        # ignore how terrible this is, I refuse to refactor
+        room_users = self.core.rooms.get(self.room_id, set())
+        about_to_kick_rocks = next((u for u in room_users if u.name == user_to_kick), None)
+
+        if not about_to_kick_rocks:
+            return
+
+        await self.core.kick(self.room_id, about_to_kick_rocks)
+
+        kick_message = ChatMessage(type="message", contents=f"{self.user.name} has kicked {about_to_kick_rocks.name}")
+        serialized_kick_message : str = serialize_message(kick_message)
+
+        await self.broadcast(serialized_kick_message)

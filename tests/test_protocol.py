@@ -12,21 +12,22 @@ from chatrooms.message import (
 )
 
 def test_generate_message_creates_chat_message():
-    message = generate_message("hello world")
+    message = generate_message("user", "hello world")
 
     assert isinstance(message, ChatMessage)
+    assert message.sender == "user"
     assert message.type == "message"
     assert message.contents == "hello world"
 
 def test_generate_message_creates_command_message():
-    message = generate_message("/help")
+    message = generate_message("""literally doesn't matter. in hind sight I should have probably put in the effort of refactoring `Message` to contain a `sender` rather than just `Message` but we kind of ran out of time ¯|_(ツ)_|¯""", "/help")
 
     assert isinstance(message, CommandMessage)
     assert message.type == "command"
     assert message.command == "help"
 
 def test_generate_message_creates_command_message_with_args():
-    message = generate_message("/swap new_room_id")
+    message = generate_message("user", "/swap new_room_id")
 
     assert isinstance(message, CommandMessage)
     assert message.type == "command"
@@ -34,9 +35,9 @@ def test_generate_message_creates_command_message_with_args():
     assert message.args == "new_room_id"
 
 def test_serialize_message_properly_serializes_chat_message():
-    message = ChatMessage(type="message", contents="hello world")
+    message = ChatMessage(type="message", sender="user", contents="hello world")
 
-    expected = '{"type": "message", "contents": "hello world"}'
+    expected = '{"type": "message", "sender": "user", "contents": "hello world"}'
     actual = serialize_message(message)
 
     assert expected == actual
@@ -73,11 +74,12 @@ def test_serialize_message_properly_serializes_error_message():
     assert expected == actual
 
 def test_parse_message_properly_parses_chat_message():
-    raw_message = '{"type": "message", "contents": "hello world"}'
+    raw_message = '{"type": "message", "sender": "user", "contents": "hello world"}'
     parsed_message = parse_message(raw_message)    
 
     assert isinstance(parsed_message, ChatMessage)
     assert parsed_message.type == "message"
+    assert parsed_message.sender == "user"
     assert parsed_message.contents == "hello world"
 
 def test_parse_message_properly_parses_command_message():

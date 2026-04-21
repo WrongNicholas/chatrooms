@@ -14,6 +14,7 @@ class JoinMessage(Message):
 @dataclass(frozen=True)
 class ChatMessage(Message):
     """Represents a chat message sent to/from server."""
+    sender: str
     contents: str
 
 @dataclass(frozen=True)

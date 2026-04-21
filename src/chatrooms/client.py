@@ -33,7 +33,7 @@ class ChatClient:
     async def send_message(self, content: str) -> None:
         """Sends a message to the server."""
         if self.ws:
-            msg: Message = generate_message(content)
+            msg: Message = generate_message(self.user_name, content)
             serialized_message: str = serialize_message(msg)
             await self.ws.send(serialized_message)
 
@@ -44,7 +44,7 @@ class ChatClient:
                 parsed_message = parse_message(msg)
 
                 if isinstance(parsed_message, ChatMessage):
-                    message_callback(parsed_message.contents)
+                    message_callback(f"{parsed_message.sender}: {parsed_message.contents}")
 
         except websockets.exceptions.ConnectionClosed:
             message_callback("System: Connection closed.")

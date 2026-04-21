@@ -29,7 +29,7 @@ class UserHandler:
                     self.core.join(self.room_id, self.user)
 
                     # Construct and broadcast chat message on join
-                    join_broadcast = ChatMessage(type="message", contents=f"{msg.user_name} has joined the room.")
+                    join_broadcast = ChatMessage(type="message", sender="", contents=f"{msg.user_name} has joined the room.")
                     serialized_join_broadcast : str = serialize_message(join_broadcast)
                     await self.broadcast(serialized_join_broadcast)
 
@@ -68,6 +68,7 @@ class UserHandler:
         else:
             await self.user.websocket.send(serialize_message(ChatMessage(
                 type="message",
+                sender="SERVER",
                 contents="Command not found! Available commands:\n /leave\n /swap <room_id>"
             )))
 
@@ -78,7 +79,7 @@ class UserHandler:
         """
         if self.user and self.room_id:
             # Construct and broadcast chat message on leave
-            leave_broadcast = ChatMessage(type="message", contents=f"{self.user.name} has left the room.")
+            leave_broadcast = ChatMessage(type="message", sender="", contents=f"{self.user.name} has left the room.")
             serialized_leave_broadcast : str = serialize_message(leave_broadcast)
             await self.broadcast(serialized_leave_broadcast)
 
@@ -92,7 +93,7 @@ class UserHandler:
         """
         if self.user and self.room_id:
             # Construct and broadcast chat message on leave
-            leave_broadcast = ChatMessage(type="message", contents=f"{self.user.name} has left the room.")
+            leave_broadcast = ChatMessage(type="message", sender="", contents=f"{self.user.name} has left the room.")
             serialized_leave_broadcast : str = serialize_message(leave_broadcast)
             await self.broadcast(serialized_leave_broadcast)
 
@@ -120,7 +121,7 @@ class UserHandler:
 
         await self.core.kick(self.room_id, about_to_kick_rocks)
 
-        kick_message = ChatMessage(type="message", contents=f"{self.user.name} has kicked {about_to_kick_rocks.name}")
+        kick_message = ChatMessage(type="message", sender="", contents=f"{self.user.name} has kicked {about_to_kick_rocks.name}")
         serialized_kick_message : str = serialize_message(kick_message)
 
         await self.broadcast(serialized_kick_message)

@@ -7,7 +7,7 @@ from dataclasses import asdict
 Message protocol utilities.
 """
 
-def generate_message(contents: str) -> Message:
+def generate_message(sender: str, contents: str) -> Message:
     """
     Creates Messages from raw input. Commands are inferred from leading '/'.
     """
@@ -25,6 +25,7 @@ def generate_message(contents: str) -> Message:
     else:
         return ChatMessage(
             type="message",
+            sender=sender,
             contents=contents
         )
 
@@ -57,6 +58,7 @@ def parse_message(raw_message: str) -> Message:
     elif message_type == "message":
         return ChatMessage(
             type="message",
+            sender=data["sender"],
             contents=data["contents"]
         )
     elif message_type == "command":

@@ -15,16 +15,16 @@ install: $(VENV)
 install-test: $(VENV)
 	$(PIP) install -e ".[test]"
 
-test: install-test
+test:
 	$(VPY) -m pytest
 
-server: install
+server: 
 	$(VPY) -m chatrooms.server
 
-client: install
+client: 
 	$(VPY) -m chatrooms.client
 
-gui: install
+gui:
 	$(VPY) -m chatrooms.gui
 
 clean:

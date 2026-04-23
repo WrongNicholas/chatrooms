@@ -4,6 +4,12 @@ A WebSocket-based chat application.
 
 ---
 
+## Note
+```sh
+make install
+```
+for anything to work.
+
 ## Setup
 
 Clone the repository:
